@@ -30,7 +30,7 @@ ua = UserAgent()
 chrome_ua = ua.chrome
 
 # MYSQL CONNECTION PARAMS
-cnx = mysql.connector.connect(host='localhost', user='root', password='password',database='flatfoxdb')
+cnx = mysql.connector.connect(host='localhost', user='python', password='password',database='flatfoxdb')
 cursor = cnx.cursor(buffered=True)
 start = time.time()
 
@@ -51,26 +51,26 @@ pcount = 0
 good_proxies = []
 
 def clear_txt():
-    f = open('good.txt', 'r+')
+    f = open('/home/flatscript/good.txt', 'r+')
     f.truncate(0) # need '0' when using r+
-    f = open('good2.txt', 'r+')
+    f = open('/home/flatscript/good2.txt', 'r+')
     f.truncate(0) # need '0' when using r+
 
 def clear_links_txt():
-    f = open('links.txt', 'r+')
+    f = open('/home/flatscript/links.txt', 'r+')
     f.truncate(0) # need '0' when using r+
    
 
 def proxies_list():
     headers={'User-Agent': chrome_ua}
     response = requests.get('https://raw.githubusercontent.com/UptimerBot/proxy-list/main/proxies/http.txt', headers=headers)
-    with open("response.txt", "w") as f:
+    with open("/home/flatscript/response.txt", "w") as f:
         f.write(response.text)
         f.close()
 
 def proxies_arr():
     proxies_arr = []
-    with open('response.txt', 'r') as reader:
+    with open('/home/flatscript/response.txt', 'r') as reader:
         for line in reader.readlines():
             # print(line, end='')
             proxies_arr.append(line.strip())
@@ -84,7 +84,7 @@ def extract(proxy):
     if(r.status_code == 200):
         pcount = pcount + 1
         print(pcount, " ", proxy, " is working ", r.status_code)
-        with open("good2.txt", "a") as myfile:
+        with open("/home/flatscript/good2.txt", "a") as myfile:
             myfile.write(proxy)
             myfile.write('\n')
             myfile.close()
@@ -116,7 +116,7 @@ def getAllBuyProperties(proxy):
         status("gotten list " + str(count) + ": " + str(link))
         ids.append(link)
 
-    with open('links.txt', "w") as  f:
+    with open('/home/flatscript/links.txt', "w") as  f:
         for line in ids:
             f.write(str(line) + "\n") 
     print("successful written to the file ")
@@ -132,7 +132,7 @@ def getTimeRange():
     return arr
 
 def readFile():
-    with open('links.txt', 'r') as f:
+    with open('/home/flatscript/links.txt', 'r') as f:
         arr = f.readlines()
         lines = len(arr)
         lines_range = getTimeRange()
@@ -196,9 +196,8 @@ def getData(proxy):
                 
 
 
-# print(getTimeRange())
-# print(save_proxies)
 start = time.time()
+print(getTimeRange())
 
 clear_txt()
 
@@ -208,12 +207,15 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(extract, proxylist)
 proxies = [*set(good_proxies)]
 print(len(proxies), " are working well")
-if(time.strftime('%H') == '9'):
+hour = int(time.strftime('%H'))
+if(hour == 0):
     clear_links_txt()
     getAllBuyProperties(random.choice(proxies))
-
-getData(random.choice(proxies))
-cursor.close()
+if(hour > 7 and hour < 17):
+    getData(random.choice(proxies))
+    cursor.close()
+else:
+    print("It is not yet time, it starts from 8am to 4pm")
 
 end = time.time()
 
