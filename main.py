@@ -128,7 +128,7 @@ def getTimeRange():
     arr = []
     timestamp = time.strftime('%H');
     hour = int(timestamp)
-    arr = [1 + (hour - 8) * 48, 1 + (hour - 7) * 48]
+    arr = [1 + (hour - 7) * 48, 1 + (hour - 6) * 48]
     return arr
 
 def readFile():
@@ -215,7 +215,7 @@ if(hour > 7 and hour < 17):
     getData(random.choice(proxies))
     cursor.close()
 else:
-    print("It is not yet time, it starts from 8am to 4pm")
+    print("It is not yet time, it starts from 7am gmt to 3pm gmt")
 
 end = time.time()
 
