@@ -128,7 +128,7 @@ def getTimeRange():
     arr = []
     timestamp = time.strftime('%H');
     hour = int(timestamp)
-    arr = [1 + (hour - 9) * 48, 1 + (hour - 8) * 48]
+    arr = [1 + (hour - 8) * 48, 1 + (hour - 7) * 48]
     return arr
 
 def readFile():
