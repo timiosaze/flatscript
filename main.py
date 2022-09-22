@@ -211,7 +211,7 @@ hour = int(time.strftime('%H'))
 if(hour == 0):
     clear_links_txt()
     getAllBuyProperties(random.choice(proxies))
-if(hour > 7 and hour < 17):
+if(hour > 6 and hour < 16):
     getData(random.choice(proxies))
     cursor.close()
 else:
